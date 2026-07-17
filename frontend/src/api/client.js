@@ -1,4 +1,15 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const productionApiUrl = "https://import2profit-api.onrender.com/api";
+const localApiUrl = "http://localhost:5000/api";
+
+function getDefaultApiUrl() {
+  if (typeof window !== "undefined" && window.location.hostname.includes("netlify.app")) {
+    return productionApiUrl;
+  }
+
+  return localApiUrl;
+}
+
+const API_URL = import.meta.env.VITE_API_URL || getDefaultApiUrl();
 
 export function getAssetUrl(path) {
   if (!path) return "";
