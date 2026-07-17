@@ -31,10 +31,22 @@ const allowedOrigins = [
   "http://127.0.0.1:5174"
 ].filter(Boolean);
 
+function isAllowedNetlifyOrigin(origin) {
+  try {
+    const { hostname, protocol } = new URL(origin);
+    return (
+      protocol === "https:" &&
+      (hostname === "import2profit.netlify.app" || hostname.endsWith("--import2profit.netlify.app"))
+    );
+  } catch {
+    return false;
+  }
+}
+
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin) || isAllowedNetlifyOrigin(origin)) {
         return callback(null, true);
       }
       return callback(new Error("Origin not allowed by CORS"));
